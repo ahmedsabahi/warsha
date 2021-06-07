@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>304311645095-esvbrhjbq4o3ohb2eurte938129r3c5q.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.304311645095-esvbrhjbq4o3ohb2eurte938129r3c5q</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>304311645095-8olujnan1cprtt8dfso31clat0kj99bp.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAL5qJFcmQxlEQizQwujD9_ZX-mvmp72ZY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>304311645095</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.warshaApp</string>
+	<key>PROJECT_ID</key>
+	<string>warsha-bda5b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>warsha-bda5b.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:304311645095:ios:4b8b88a5c870fe07cfbc82</string>
+</dict>
+</plist>

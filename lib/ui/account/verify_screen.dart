@@ -1,52 +1,37 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:warsha_app/ui/home_page.dart';
+import 'package:provider/provider.dart';
+import 'package:warsha_app/ui/bottom_navbar.dart';
+import 'package:warsha_app/utils/authentication.dart';
 
-class VerifyPage extends StatefulWidget {
-  final String id;
+class VerifyScreen extends StatefulWidget {
+  final String num;
+  final String code;
 
-  VerifyPage({
+  VerifyScreen({
     Key key,
-    @required this.id,
+    @required this.num,
+    @required this.code,
   }) : super(key: key);
 
   @override
-  _VerifyPageState createState() => _VerifyPageState();
+  _VerifyScreenState createState() => _VerifyScreenState();
 }
 
-class _VerifyPageState extends State<VerifyPage> {
-  TextEditingController _textEditingController = TextEditingController();
-  String currentText = "";
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
-
-  void signInWithPhoneNumber(String smsCode) async {
-    try {
-      // Create a PhoneAuthCredential with the code
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: widget.id, smsCode: smsCode);
-
-      // // Sign the user in (or link) with the credential
-      (await FirebaseAuth.instance.signInWithCredential(credential)).user;
-
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => HomePage(),
-      ));
-    } catch (e) {
-      print("Error:------ $e");
-    }
-  }
+class _VerifyScreenState extends State<VerifyScreen> {
+  bool hasError = false;
+  TextEditingController _otpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<Authentication>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
+        reverse: true,
         child: Column(
           children: [
             Row(
@@ -69,13 +54,16 @@ class _VerifyPageState extends State<VerifyPage> {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 25.0, top: 80.0),
+                      padding: const EdgeInsets.only(bottom: 15.0, top: 60.0),
                       child: Container(
                         width: 250,
                         child: Text(
                           'رسالة التحقيق',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 40),
+                          style: TextStyle(
+                            fontSize: 27,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                     ),
@@ -101,9 +89,12 @@ class _VerifyPageState extends State<VerifyPage> {
                             child: Container(
                               width: 250,
                               child: Text(
-                                'الرجاء إدخال التحقق المكون من 4 أرقام تم إرسال الرمز إلى رقم هاتفك الخلوي 310555 5555 عبر الرسائل القصيرة أو قم بتغيير رقمك.',
+                                'الرجاء إدخال التحقق المكون من 6 أرقام تم إرسال الرمز إلى رقم هاتفك الخلوي ${widget.code + widget.num} عبر الرسائل القصيرة أو قم بتغيير رقمك.',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 18),
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                           ),
@@ -111,9 +102,11 @@ class _VerifyPageState extends State<VerifyPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.only(
+                          right: 30.0, left: 30.0, top: 30.0),
                       child: PinCodeTextField(
                         length: 6,
+                        enablePinAutofill: true,
                         obscureText: false,
                         appContext: context,
                         keyboardType: TextInputType.number,
@@ -130,7 +123,7 @@ class _VerifyPageState extends State<VerifyPage> {
                         animationDuration: Duration(milliseconds: 300),
                         animationType: AnimationType.fade,
                         enableActiveFill: true,
-                        controller: _textEditingController,
+                        controller: _otpController,
                         cursorColor: Colors.black,
                         onCompleted: (v) {
                           print("Completed");
@@ -146,8 +139,15 @@ class _VerifyPageState extends State<VerifyPage> {
                         },
                       ),
                     ),
+                    Text(
+                      hasError ? "*Please fill up all the cells properly" : '',
+                      style: TextStyle(
+                        color: Colors.red.shade300,
+                        fontSize: 15,
+                      ),
+                    ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 20.0),
+                      padding: EdgeInsets.only(bottom: 20.0, top: 10.0),
                       child: Container(
                         width: 70.0,
                         height: 70.0,
@@ -161,8 +161,26 @@ class _VerifyPageState extends State<VerifyPage> {
                               ),
                             ),
                           ),
-                          onPressed: () {
-                            signInWithPhoneNumber(_textEditingController.text);
+                          onPressed: () async {
+                            if (_otpController.text.length != 6) {
+                              setState(() {
+                                hasError = true;
+                              });
+                            } else {
+                              setState(() {
+                                hasError = false;
+                              });
+                              User user = await authProvider.submitOTP(
+                                  context: context, sms: _otpController.text);
+
+                              if (user != null) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BottomNavBar()),
+                                    (route) => false);
+                              }
+                            }
                           },
                           child: Icon(
                             Icons.arrow_forward_rounded,

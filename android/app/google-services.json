@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "304311645095-8olujnan1cprtt8dfso31clat0kj99bp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.warsha_app",
+            "certificate_hash": "28a7d4e6f8d2babe5786f0a87f9d6f0f40defdfd"
+          }
+        },
+        {
           "client_id": "304311645095-qcht3vqm6agdhh957el6ofqu13vpgvvu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
